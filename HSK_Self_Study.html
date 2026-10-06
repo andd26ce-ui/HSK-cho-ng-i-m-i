@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HSK Self Study - Tự học tiếng Trung</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--primary:#e53935;--primary2:#ff7043;--line:#e5e7eb;--good:#16a34a;--bad:#dc2626;--shadow:0 10px 30px rgba(16,24,40,.08)}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,Segoe UI,Arial,sans-serif;background:var(--bg);color:var(--text)}
+header{background:linear-gradient(135deg,#b71c1c,#ef5350);color:white;padding:24px 6%;position:sticky;top:0;z-index:10;box-shadow:var(--shadow)}
+.header{max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font-size:25px;font-weight:800}.brand small{display:block;font-size:12px;opacity:.85;margin-top:3px}
+select,button,input{font:inherit} select{padding:10px 14px;border-radius:10px;border:0;background:white;color:#222;font-weight:600}
+main{max-width:1200px;margin:28px auto;padding:0 20px}.hero{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
+.hero h1{margin:0 0 8px;font-size:34px}.hero p{color:var(--muted);line-height:1.6}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#fff7f5;border-radius:14px;padding:15px;text-align:center}.stat b{font-size:25px;display:block;color:var(--primary)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.tab{border:1px solid var(--line);background:white;padding:11px 17px;border-radius:12px;cursor:pointer;font-weight:700}.tab.active{background:var(--primary);color:white;border-color:var(--primary)}
+.section{display:none}.section.active{display:block}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.word{font-size:46px;font-weight:800;text-align:center;margin:15px 0 4px}.pinyin{text-align:center;font-size:20px;color:var(--primary);font-weight:700}.meaning{text-align:center;font-size:18px;margin:10px 0 18px}.example{background:#f8fafc;padding:14px;border-radius:12px;text-align:center;line-height:1.8}
+.btns{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:16px}button{border:0;border-radius:11px;padding:11px 15px;cursor:pointer;font-weight:700;background:#eef2f6;color:#172033}button.primary{background:var(--primary);color:#fff}button.good{background:#dcfce7;color:#166534}button.warn{background:#fff7ed;color:#9a3412}
+.progress{height:10px;background:#eee;border-radius:99px;overflow:hidden;margin:8px 0 15px}.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),var(--primary2));width:0}
+.list{display:grid;gap:10px}.vocab-row{display:grid;grid-template-columns:90px 1fr auto;align-items:center;gap:12px;padding:13px;border:1px solid var(--line);border-radius:12px}.cn{font-size:26px;font-weight:800}.py{color:var(--primary)}.muted{color:var(--muted);font-size:14px}
+.quiz-q{font-size:25px;font-weight:800;margin:15px 0}.answers{display:grid;grid-template-columns:1fr 1fr;gap:10px}.answers button{text-align:left;padding:15px;background:#f8fafc;border:1px solid var(--line)}.answers button:hover{border-color:var(--primary)}.result{font-weight:800;margin-top:15px}
+textarea{width:100%;min-height:90px;border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical}
+.mic{font-size:40px}.speech-result{min-height:40px;background:#f8fafc;padding:12px;border-radius:12px;margin-top:10px}
+.plan li{margin:10px 0}.note{font-size:13px;color:var(--muted);line-height:1.5}
+footer{text-align:center;color:var(--muted);padding:30px}
+@media(max-width:800px){.hero,.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(3,1fr)}.answers{grid-template-columns:1fr}.vocab-row{grid-template-columns:65px 1fr auto}.word{font-size:38px}}
+</style>
+</head>
+<body>
+<header><div class="header">
+<div class="brand">🇨🇳 HSK Self Study <small>Trợ lý tự học tiếng Trung</small></div>
+<label>HSK <select id="level"><option value="1">HSK 1</option><option value="2">HSK 2</option><option value="3">HSK 3</option><option value="4">HSK 4</option><option value="5">HSK 5</option><option value="6">HSK 6</option></select></label>
+</div></header>
+
+<main>
+<div class="hero">
+<div class="card">
+<h1>Học HSK mỗi ngày 🚀</h1>
+<p>Ứng dụng tự học dành cho người mới bắt đầu. Học từ vựng, nghe phát âm tiếng Trung, luyện nói bằng micro và kiểm tra kiến thức ngay trên trình duyệt.</p>
+<div class="progress"><i id="mainProgress"></i></div><div class="note" id="progressText">0% hoàn thành bộ từ vựng mẫu</div>
+</div>
+<div class="card">
+<div class="stats"><div class="stat"><b id="known">0</b>Đã nhớ</div><div class="stat"><b id="score">0</b>Điểm quiz</div><div class="stat"><b id="streak">0</b>Ngày học</div></div>
+</div>
+</div>
+
+<div class="tabs">
+<button class="tab active" data-tab="dashboard">🏠 Tổng quan</button>
+<button class="tab" data-tab="vocab">📚 Từ vựng</button>
+<button class="tab" data-tab="listen">🎧 Nghe</button>
+<button class="tab" data-tab="speak">🎤 Nói</button>
+<button class="tab" data-tab="quiz">🧠 Quiz</button>
+<button class="tab" data-tab="plan">🗓️ Lộ trình</button>
+</div>
+
+<section id="dashboard" class="section active">
+<div class="grid">
+<div class="card"><h2>Từ hôm nay</h2><div id="dailyWord"></div></div>
+<div class="card"><h2>Phương pháp học</h2><ol class="plan"><li>Học 10–15 từ mới.</li><li>Nghe mỗi từ ít nhất 3 lần.</li><li>Đọc to và dùng micro luyện nói.</li><li>Làm quiz cuối buổi.</li><li>Ôn lại các từ trả lời sai.</li></ol></div>
+</div>
+</section>
+
+<section id="vocab" class="section">
+<div class="card"><h2>📚 Kho từ vựng HSK <span id="levelTitle">1</span></h2><p class="note">Bộ dữ liệu mẫu bên dưới có thể mở rộng thêm hàng nghìn từ.</p><div class="list" id="vocabList"></div></div>
+</section>
+
+<section id="listen" class="section">
+<div class="grid">
+<div class="card"><h2>🎧 Luyện nghe</h2><p>Nghe từ/câu tiếng Trung bằng giọng đọc có sẵn trên thiết bị.</p><div id="listenWord" class="word"></div><div id="listenPy" class="pinyin"></div><div class="btns"><button class="primary" onclick="speakCurrent()">🔊 Phát âm</button><button onclick="nextListen()">➡️ Từ tiếp theo</button></div><p class="note">Nếu không có âm thanh, hãy kiểm tra loa và trình duyệt.</p></div>
+<div class="card"><h2>🎯 Chế độ nghe</h2><p>Nghe tiếng Trung rồi chọn nghĩa đúng.</p><button class="primary" onclick="startListeningQuiz()">Bắt đầu bài nghe</button><div id="listenQuiz"></div></div>
+</div>
+</section>
+
+<section id="speak" class="section">
+<div class="grid">
+<div class="card"><h2>🎤 Luyện nói</h2><div id="speakWord" class="word"></div><div id="speakPy" class="pinyin"></div><div id="speakMeaning" class="meaning"></div><div class="btns"><button onclick="speakTarget()">🔊 Nghe mẫu</button><button class="primary" onclick="startSpeech()">🎙️ Bắt đầu nói</button><button onclick="nextSpeak()">➡️ Từ khác</button></div><div id="speechResult" class="speech-result">Chưa có kết quả...</div><div id="speechFeedback" class="result"></div></div>
+<div class="card"><h2>💡 Mẹo phát âm</h2><ul><li>Nghe mẫu trước khi nói.</li><li>Nói chậm và rõ từng âm tiết.</li><li>Hãy cố gắng bắt chước thanh điệu.</li><li>Chrome/Edge thường hỗ trợ Speech Recognition tốt hơn.</li></ul><p class="note">Chấm điểm phát âm trong phiên bản này dựa trên mức độ khớp từ/cụm từ nhận diện được, không phải phân tích âm thanh chuyên sâu.</p></div>
+</div>
+</section>
+
+<section id="quiz" class="section">
+<div class="card"><h2>🧠 Quiz từ vựng</h2><p>Chọn nghĩa tiếng Việt đúng với từ tiếng Trung.</p><div id="quizArea"></div><div class="btns"><button class="primary" onclick="newQuiz()">Câu hỏi mới</button></div></div>
+</section>
+
+<section id="plan" class="section">
+<div class="card"><h2>🗓️ Lộ trình cho người mới</h2>
+<div class="grid"><div><h3>Tuần 1</h3><ul><li>Pinyin + 4 thanh điệu</li><li>Chào hỏi, số đếm</li><li>Đại từ nhân xưng</li><li>Gia đình, nghề nghiệp cơ bản</li></ul></div>
+<div><h3>Tuần 2</h3><ul><li>Thời gian và ngày tháng</li><li>Đồ ăn, thức uống</li><li>Địa điểm và phương hướng</li><li>Cấu trúc câu cơ bản</li></ul></div>
+<div><h3>Tuần 3</h3><ul><li>Ôn từ vựng bằng quiz</li><li>Luyện nghe câu ngắn</li><li>Luyện nói theo mẫu</li></ul></div>
+<div><h3>Tuần 4</h3><ul><li>Ôn toàn bộ</li><li>Mini test</li><li>Tập phản xạ nghe – nói</li></ul></div></div>
+<p class="note">Gợi ý: 30–45 phút/ngày. Quan trọng nhất là học đều đặn và ôn lặp lại.</p>
+</div>
+</section>
+</main>
+<footer>HSK Self Study • Dữ liệu học tập được lưu trên trình duyệt của bạn.</footer>
+
+<script>
+const data={
+1:[
+["你好","nǐ hǎo","xin chào","你好！很高兴认识你。"],
+["我","wǒ","tôi, mình","我是学生。"],
+["你","nǐ","bạn","你好吗？"],
+["他","tā","anh ấy","他是我的朋友。"],
+["她","tā","cô ấy","她是老师。"],
+["是","shì","là","我是越南人。"],
+["不","bù","không","我不是老师。"],
+["谢谢","xièxie","cảm ơn","谢谢你！"],
+["再见","zàijiàn","tạm biệt","明天再见！"],
+["请","qǐng","mời, xin","请坐。"],
+["好","hǎo","tốt","很好，谢谢。"],
+["人","rén","người","他是一个好人。"],
+["学生","xuésheng","học sinh, sinh viên","我是学生。"],
+["老师","lǎoshī","giáo viên","她是老师。"],
+["朋友","péngyou","bạn bè","他是我的朋友。"],
+["中国","Zhōngguó","Trung Quốc","我喜欢中国。"],
+["越南","Yuènán","Việt Nam","我来自越南。"],
+["吃","chī","ăn","我吃米饭。"],
+["喝","hē","uống","我喝水。"],
+["水","shuǐ","nước","请给我水。"],
+["喜欢","xǐhuan","thích","我喜欢学习中文。"],
+["学习","xuéxí","học","我学习汉语。"],
+["汉语","Hànyǔ","tiếng Trung","汉语很有意思。"],
+["什么","shénme","cái gì","你叫什么名字？"],
+["名字","míngzi","tên","我的名字叫安。"],
+["哪","nǎ","nào, đâu","你是哪国人？"],
+["谁","shéi","ai","他是谁？"],
+["家","jiā","nhà, gia đình","我回家。"],
+["学校","xuéxiào","trường học","我在学校。"],
+["今天","jīntiān","hôm nay","今天很好。"]
+],
+2:[
+["觉得","juéde","cảm thấy, cho rằng","我觉得中文很有意思。"],
+["已经","yǐjīng","đã","我已经吃饭了。"],
+["一起","yìqǐ","cùng nhau","我们一起学习。"],
+["开始","kāishǐ","bắt đầu","现在开始学习。"],
+["希望","xīwàng","hy vọng","我希望学好中文。"],
+["帮助","bāngzhù","giúp đỡ","谢谢你的帮助。"],
+["因为","yīnwèi","bởi vì","因为下雨，所以我在家。"],
+["所以","suǒyǐ","cho nên","我很累，所以想休息。"],
+["可能","kěnéng","có thể","明天可能下雨。"],
+["问题","wèntí","vấn đề, câu hỏi","我有一个问题。"]
+],
+3:[
+["提高","tígāo","nâng cao","我想提高中文水平。"],
+["经验","jīngyàn","kinh nghiệm","他有很多工作经验。"],
+["习惯","xíguàn","thói quen","我已经习惯早起。"],
+["选择","xuǎnzé","lựa chọn","你可以选择一个答案。"],
+["特别","tèbié","đặc biệt","今天特别忙。"],
+["参加","cānjiā","tham gia","我想参加考试。"],
+["决定","juédìng","quyết định","我决定每天学习。"],
+["需要","xūyào","cần","我需要一点时间。"],
+["了解","liǎojiě","tìm hiểu, hiểu","我想了解中国文化。"],
+["机会","jīhuì","cơ hội","这是一个好机会。"]
+],
+4:[
+["准确","zhǔnquè","chính xác","请给我一个准确的答案。"],
+["复杂","fùzá","phức tạp","这个问题很复杂。"],
+["建议","jiànyì","đề nghị, lời khuyên","谢谢你的建议。"],
+["目的","mùdì","mục đích","学习的目的是交流。"],
+["适合","shìhé","phù hợp","这个方法很适合我。"],
+["负责","fùzé","chịu trách nhiệm","他负责这个项目。"],
+["过程","guòchéng","quá trình","学习是一个长期过程。"],
+["成功","chénggōng","thành công","坚持才能成功。"],
+["机会","jīhuì","cơ hội","不要错过机会。"],
+["环境","huánjìng","môi trường","这里的学习环境很好。"]
+],
+5:[
+["概念","gàiniàn","khái niệm","这个概念很重要。"],
+["现象","xiànxiàng","hiện tượng","这是一个常见现象。"],
+["影响","yǐngxiǎng","ảnh hưởng","科技影响我们的生活。"],
+["观点","guāndiǎn","quan điểm","我同意你的观点。"],
+["承担","chéngdān","đảm nhận, gánh vác","我们要承担责任。"],
+["逐渐","zhújiàn","dần dần","天气逐渐变冷。"],
+["显然","xiǎnrán","rõ ràng","显然这是一个好办法。"],
+["实际","shíjì","thực tế","理论要结合实际。"],
+["措施","cuòshī","biện pháp","我们需要采取措施。"],
+["资源","zīyuán","tài nguyên","保护自然资源很重要。"]
+],
+6:[
+["逻辑","luójí","logic","这篇文章的逻辑很清楚。"],
+["趋势","qūshì","xu hướng","我们需要了解市场趋势。"],
+["原则","yuánzé","nguyên tắc","我们应该坚持原则。"],
+["领域","lǐngyù","lĩnh vực","他在这个领域很有经验。"],
+["促进","cùjìn","thúc đẩy","交流可以促进理解。"],
+["承担","chéngdān","gánh vác","每个人都要承担责任。"],
+["实施","shíshī","thực hiện","计划已经开始实施。"],
+["评价","píngjià","đánh giá","请评价一下这个方法。"],
+["深入","shēnrù","sâu sắc, đi sâu","我们需要深入研究。"],
+["逐步","zhúbù","từng bước","问题正在逐步解决。"]
+]};
+let level=1, idx=0, speakIdx=0, listenIdx=0, quizData=null, listenData=null;
+let state=JSON.parse(localStorage.getItem("hskStudyState")||'{"known":{},"score":0,"days":0,"lastDay":""}');
+function save(){localStorage.setItem("hskStudyState",JSON.stringify(state));updateStats();}
+function words(){return data[level]||data[1]}
+function updateStats(){
+ document.getElementById("known").textContent=Object.keys(state.known).length;
+ document.getElementById("score").textContent=state.score;
+ const today=new Date().toISOString().slice(0,10);
+ if(state.lastDay!==today){state.days=Math.max(state.days||0, state.days||0);}
+ document.getElementById("streak").textContent=state.days||0;
+ const p=Math.min(100,Math.round(Object.keys(state.known).length/words().length*100));
+ document.getElementById("mainProgress").style.width=p+"%";document.getElementById("progressText").textContent=p+"% hoàn thành bộ từ vựng mẫu";
+}
+function markDay(){const today=new Date().toISOString().slice(0,10);if(state.lastDay!==today){state.days=(state.days||0)+1;state.lastDay=today;save()}}
+function speak(text){if(!("speechSynthesis" in window)){alert("Trình duyệt không hỗ trợ đọc tiếng Trung.");return} speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="zh-CN";u.rate=.78;speechSynthesis.speak(u)}
+function speakCurrent(){speak(words()[listenIdx][0])}
+function renderDaily(){const w=words()[new Date().getDate()%words().length];document.getElementById("dailyWord").innerHTML=`<div class="word">${w[0]}</div><div class="pinyin">${w[1]}</div><div class="meaning">${w[2]}</div><div class="example">${w[3]}</div><div class="btns"><button class="primary" onclick="speak('${w[0]}')">🔊 Nghe</button><button class="good" onclick="know('${w[0]}')">✓ Đã nhớ</button></div>`}
+function know(w){state.known[w]=true;markDay();save();renderVocab();renderDaily()}
+function renderVocab(){document.getElementById("levelTitle").textContent=level;document.getElementById("vocabList").innerHTML=words().map((w,i)=>`<div class="vocab-row"><div class="cn">${w[0]}</div><div><div class="py">${w[1]}</div><div>${w[2]}</div><div class="muted">${w[3]}</div></div><div><button onclick="speak('${w[0]}')">🔊</button><button class="${state.known[w[0]]?'good':''}" onclick="know('${w[0]}')">${state.known[w[0]]?'✓':'Đã nhớ'}</button></div></div>`).join("")}
+function nextListen(){listenIdx=(listenIdx+1)%words().length;renderListen()}
+function renderListen(){let w=words()[listenIdx];document.getElementById("listenWord").textContent=w[0];document.getElementById("listenPy").textContent=w[1]}
+function startListeningQuiz(){
+ const w=words()[Math.floor(Math.random()*words().length)], others=[...words()].filter(x=>x!==w).sort(()=>Math.random()-.5).slice(0,3);const opts=[w,...others].sort(()=>Math.random()-.5);listenData=w;
+ document.getElementById("listenQuiz").innerHTML=`<div class="quiz-q">Nghe và chọn nghĩa đúng:</div><div class="btns">${opts.map(o=>`<button onclick="checkListen('${o[0].replace(/'/g,"\\'")}')">${o[2]}</button>`).join("")}</div>`;
+ speak(w[0]);
+}
+function checkListen(ans){const ok=ans===listenData[0];document.getElementById("listenQuiz").insertAdjacentHTML("beforeend",`<div class="result" style="color:${ok?'var(--good)':'var(--bad)'}">${ok?'✓ Chính xác!':'✗ Chưa đúng. Đáp án: '+listenData[2]}</div>`);if(ok){state.score++;markDay();save()}}
+function nextSpeak(){speakIdx=(speakIdx+1)%words().length;renderSpeak()}
+function renderSpeak(){const w=words()[speakIdx];document.getElementById("speakWord").textContent=w[0];document.getElementById("speakPy").textContent=w[1];document.getElementById("speakMeaning").textContent=w[2];document.getElementById("speechResult").textContent="Chưa có kết quả...";document.getElementById("speechFeedback").textContent=""}
+function speakTarget(){speak(words()[speakIdx][0])}
+function startSpeech(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){alert("Trình duyệt này chưa hỗ trợ nhận diện giọng nói. Hãy thử Google Chrome hoặc Microsoft Edge.");return}
+ const target=words()[speakIdx][0];const r=new SR();r.lang="zh-CN";r.interimResults=false;r.maxAlternatives=3;
+ document.getElementById("speechResult").textContent="🎙️ Đang nghe...";
+ r.onresult=e=>{const heard=e.results[0][0].transcript.trim();document.getElementById("speechResult").textContent="Bạn nói: "+heard;const norm=s=>s.replace(/[，。！？,.!? ]/g,"").toLowerCase();const ok=norm(heard).includes(norm(target));document.getElementById("speechFeedback").innerHTML=ok?'<span style="color:var(--good)">✓ Rất tốt! Nhận diện khớp mục tiêu.</span>':'<span style="color:var(--bad)">✗ Chưa khớp. Hãy nghe mẫu và thử lại.</span>';if(ok){state.score++;markDay();save()}};r.onerror=()=>document.getElementById("speechResult").textContent="Không nhận diện được giọng nói. Hãy thử lại.";r.start()
+}
+function newQuiz(){
+ const ws=words();quizData=ws[Math.floor(Math.random()*ws.length)];const opts=[quizData,...ws.filter(x=>x!==quizData).sort(()=>Math.random()-.5).slice(0,3)].sort(()=>Math.random()-.5);
+ document.getElementById("quizArea").innerHTML=`<div class="quiz-q">${quizData[0]} <span class="pinyin">${quizData[1]}</span></div><div class="answers">${opts.map(o=>`<button onclick="checkQuiz('${o[0].replace(/'/g,"\\'")}')">${o[2]}</button>`).join("")}</div><div id="quizResult" class="result"></div>`;
+}
+function checkQuiz(ans){const ok=ans===quizData[0];document.getElementById("quizResult").innerHTML=ok?'<span style="color:var(--good)">✓ Chính xác!</span>':'<span style="color:var(--bad)">✗ Sai. Đáp án: '+quizData[2]+'</span>';if(ok){state.score++;know(quizData[0])}else markDay();save()}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".section").forEach(x=>x.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active")});
+document.getElementById("level").onchange=e=>{level=+e.target.value;idx=speakIdx=listenIdx=0;renderAll()}
+function renderAll(){renderVocab();renderDaily();renderListen();renderSpeak();newQuiz();updateStats()}
+renderAll();
+</script>
+</body>
+</html>
